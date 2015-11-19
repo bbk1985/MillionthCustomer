@@ -35,8 +35,10 @@ public class Product implements Comparable<Product> {
 	@Override
 	public int compareTo(Product o) {
 		// TODO Auto-generated method stub
-		if (o.getWeightedRank()-this.weightedRank < 0) return -1;
-		else if (o.getWeightedRank()==weightedRank) return 0;
+		if (this.weightedRank - o.getWeightedRank() < 0) return -1;
+		else if (o.getWeightedRank()==weightedRank) {
+			return this.weight-o.getWeight();
+		}
 		else return 1;
 	}
 	

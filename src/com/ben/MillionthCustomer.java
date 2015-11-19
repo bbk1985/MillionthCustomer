@@ -67,13 +67,16 @@ public class MillionthCustomer {
 			if (scanner!=null) scanner.close();
 		}
 		
-		// order by most efficient price to weight ratio
+		// order by most efficient price to size ratio
 		warehouseItems.sort(new Comparator<Product>() {
 			@Override
 			public int compare(Product o1, Product o2) {
 				// TODO Auto-generated method stub
 				if (o1.getWeightedRank()-o2.getWeightedRank() > 0) return -1;
-				else if (o1.getWeightedRank()-o2.getWeightedRank()==0) return 0;
+				// if price to size ratio is same, order by lightest weight
+				else if (o1.getWeightedRank()-o2.getWeightedRank()==0) {
+					return (o1.getWeight()-o2.getWeight());
+				}
 				else return 1;
 			}
 		});
@@ -87,9 +90,6 @@ public class MillionthCustomer {
 		}
 		
 		System.out.println("email to : "+tote.getProductIdSum()+"@redmart.com");
-		
 		tote.printProduct();
-		
-		
 	}	
 }
