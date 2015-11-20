@@ -180,16 +180,12 @@ public class Tote {
 	}
 	
 	protected int getWeight() {
-		if (this.weight==0)
-			updateTote();
-		
+		updateTote();
 		return this.weight;
 	}
 	
 	protected int getValue() {
-		if (this.value==0)
-			updateTote();
-		
+		updateTote();
 		return this.value;
 	}
 	

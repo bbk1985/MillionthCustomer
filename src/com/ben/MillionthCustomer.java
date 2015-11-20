@@ -8,6 +8,7 @@ import java.util.Scanner;
 public class MillionthCustomer {
 
 	private static ArrayList<Product> warehouseItems = new ArrayList<Product>();
+	private static ArrayList<Tote> toteHistory = new ArrayList<Tote>();
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub		
@@ -84,19 +85,36 @@ public class MillionthCustomer {
 			}
 		});
 		
-		// keep adding to tote
+		// keep adding to tote history
 		// will have to implement if minimum size reached then break iteration
-		Tote tote = new Tote();
-		for (Product p : warehouseItems) {
-			tote.add(p);
-			if (!tote.canFit(minSide)) {
-				break;	
+		Tote tote = null;
+		for (Product ip : warehouseItems) {
+			tote = new Tote();
+			tote.add(ip);
+			for (Product p : warehouseItems) {
+				tote.add(p);
+				if (!tote.canFit(minSide)) {
+					break;
+				}
 			}
+			// add to history list
+			toteHistory.add(tote);
+			tote = null;
 		}
 		
-		for (Product p : tote.getProducts()) 
-			System.out.println(p.toString());
+		toteHistory.sort(new Comparator<Tote>() {
+			@Override
+			public int compare(Tote o1, Tote o2) {
+				// TODO Auto-generated method stub
+				return o2.getValue()-o1.getValue();
+			}
+		});
 		
+		tote = toteHistory.get(0);
+		for (Product p : tote.getProducts()) {
+			System.out.println(p.toString());
+		}
+
 		System.out.println("email to : "+tote.getProductIdSum()+"@redmart.com");
 	}
 }
