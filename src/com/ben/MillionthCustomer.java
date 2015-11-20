@@ -9,14 +9,13 @@ public class MillionthCustomer {
 
 	private static ArrayList<Product> warehouseItems = new ArrayList<Product>();
 	private static ArrayList<Tote> toteHistory = new ArrayList<Tote>();
+	private static int minSide = 0;
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub		
 		// read products file
 		Scanner scanner = null;
 		String[] productInfo = null;
-		
-		int minSide = 0;
 		
 		try {
 			scanner = new Scanner(new File(args[0]));
@@ -85,6 +84,7 @@ public class MillionthCustomer {
 			}
 		});
 		
+		// TODO: change it to recursion
 		// keep adding to tote history
 		// will have to implement if minimum size reached then break iteration
 		Tote tote = null;
@@ -95,6 +95,12 @@ public class MillionthCustomer {
 				tote.add(p);
 				if (!tote.canFit(minSide)) {
 					break;
+				}
+				for (Product pp : warehouseItems) {
+					tote.add(pp);
+					if (!tote.canFit(minSide)) {
+						break;
+					}	
 				}
 			}
 			// add to history list
@@ -117,4 +123,29 @@ public class MillionthCustomer {
 
 		System.out.println("email to : "+tote.getProductIdSum()+"@redmart.com");
 	}
+	
+	/*
+	protected static void addToTote() {
+		Tote tote = null;
+		for (Product ip : warehouseItems) {
+			tote = new Tote();
+			tote.add(ip);
+			for (Product p : warehouseItems) {
+				tote.add(p);
+				if (!tote.canFit(minSide)) {
+					break;
+				}
+				for (Product pp : warehouseItems) {
+					tote.add(pp);
+					if (!tote.canFit(minSide)) {
+						break;
+					}	
+				}
+			}
+			// add to history list
+			toteHistory.add(tote);
+			tote = null;
+		}
+	}
+	*/
 }
