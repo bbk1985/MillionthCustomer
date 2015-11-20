@@ -8,13 +8,14 @@ import java.util.Scanner;
 public class MillionthCustomer {
 
 	private static ArrayList<Product> warehouseItems = new ArrayList<Product>();
-	private static int minDimension;
-	
+
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub		
 		// read products file
 		Scanner scanner = null;
 		String[] productInfo = null;
+		
+		int minSide = 0;
 		
 		try {
 			scanner = new Scanner(new File(args[0]));
@@ -40,25 +41,27 @@ public class MillionthCustomer {
 				mWidth = Integer.valueOf(productInfo[3]);
 				mHeight = Integer.valueOf(productInfo[4]);
 				mWeight = Integer.valueOf(productInfo[5]);
-				
+
 				// if item cannot fit the tote, skip it
-				if ((mLength > Tote.height) || (mLength > Tote.width) || (mLength > Tote.length))
+				if ((mLength > Tote.HEIGHT) && (mLength > Tote.WIDTH) && (mLength > Tote.LENGTH))
 					continue;
-				else if ((mWidth > Tote.height) || (mWidth > Tote.width) || (mWidth > Tote.length))
+				else if ((mWidth > Tote.HEIGHT) && (mWidth > Tote.WIDTH) && (mWidth > Tote.LENGTH))
 					continue;
-				else if ((mHeight > Tote.height) || (mHeight > Tote.width) || (mHeight > Tote.length))
+				else if ((mHeight > Tote.HEIGHT) && (mHeight > Tote.WIDTH) && (mHeight > Tote.LENGTH))
 					continue;
+				
+				// keep track of smallest side
+				if ((minSide==0)||(minSide>mLength)||(minSide>mWidth)||(minSide>mHeight)) 
+					minSide = Math.min(mLength, Math.min(mWidth, mHeight));
 				
 				// get dimension of product
 				mDimension = mLength * mWidth * mHeight;
 				
-				// save minimum dimension
-				if (minDimension > mDimension) minDimension = mDimension;
-				
 				//mWeightedRank = ((1-((double)mDimension/Tote.dimension))*((double)mPrice/mDimension))*Tote.dimension;
 				mWeightedRank = (double)mPrice/mDimension;
 				
-				pEntry = new Product(mId, mPrice, mWeight, mDimension, mWeightedRank);
+				pEntry = new Product(mId, mPrice, mWeight, mDimension, mWeightedRank, mLength, mWidth, mHeight);
+
 				warehouseItems.add(pEntry);
 			}
 		} catch (Exception e) {
@@ -81,15 +84,19 @@ public class MillionthCustomer {
 			}
 		});
 		
-		// add item to tote until remaining space is less than minimum product size
+		// keep adding to tote
+		// will have to implement if minimum size reached then break iteration
 		Tote tote = new Tote();
 		for (Product p : warehouseItems) {
 			tote.add(p);
-			if (tote.getEmptySpace() < minDimension)
-				break;
+			if (!tote.canFit(minSide)) {
+				break;	
+			}
 		}
 		
+		for (Product p : tote.getProducts()) 
+			System.out.println(p.toString());
+		
 		System.out.println("email to : "+tote.getProductIdSum()+"@redmart.com");
-		tote.printProduct();
-	}	
+	}
 }
